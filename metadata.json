@@ -1,0 +1,6 @@
+{
+  "name": "ClimbLog",
+  "description": "A web application for climbers to record their progress, discover gyms, and share experiences. It features gym information, video uploads, activity tracking with statistics, and a social feed.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}

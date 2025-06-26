@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0; /* Recommended for Vite projects */
+  min-height: 100vh; /* Ensure full height */
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Consider using Tailwind colors e.g., theme('colors.gray.100') */
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #888; /* Consider using Tailwind colors e.g., theme('colors.gray.500') */
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Consider using Tailwind colors e.g., theme('colors.gray.700') */
+}
+
+/* Basic styling for react-tooltip, can be customized further */
+.custom-tooltip {
+  background-color: #333 !important; /* Consider Tailwind colors */
+  color: #fff !important;
+  border-radius: 4px !important;
+  padding: 8px 12px !important;
+  font-size: 0.875rem !important;
+  z-index: 9999 !important;
+}
+
+#root {
+  min-height: 100vh; /* Ensure root takes full height */
+  display: flex;
+  flex-direction: column;
+}
