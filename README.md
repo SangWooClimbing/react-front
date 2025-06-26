@@ -1,14 +1,13 @@
-# Run and deploy your AI Studio app
+# 클라이밍 프론트
 
-This contains everything you need to run your app locally.
+## 빌드 방법
 
-## Run Locally
+1. 프로젝트 루트 디렉터리로 이동해서 `npm install`을 입력해서 필요한 라이브러리들을 다운로드 받는다.
+   -> 다운로드 된 라이브러리들은 node_modules에 설치된다.
 
-**Prerequisites:**  Node.js
+2. `npm run dev`를 입력해서 개발 모드로 실행할 수 있다. -> 변경 내용 실시간 반영
 
+개발 환경은 추후 Dockerfile을 작성해서 하나의 이미지로 만들어 통합할 예정이다.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+- Node.js v22.13.0.
+- java 17.0.15 2025-04-15 LTS
