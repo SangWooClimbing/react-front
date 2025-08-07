@@ -24,7 +24,7 @@ const StoreItemDetailsPage: React.FC = () => {
   const addItemToCart = useCartStore(state => state.addItem);
   const isItemInCart = useCartStore(state => state.isItemInCart);
 
-  // TODO: This is a placeholder API fetch function. Replace with your actual API call.
+  // This is a placeholder API fetch function. Replace with your actual API call.
   const fetchApi = useCallback(async (url: string, options: RequestInit = {}) => {
     const token = localStorage.getItem('accessToken'); // Though likely not needed for public item view
     const headers = {

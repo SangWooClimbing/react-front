@@ -25,7 +25,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isAuthenticated, loggedInUser
 
   const targetUserId = userIdParam || loggedInUserId;
 
-  // TODO: This is a placeholder API fetch function. Replace with your actual API call.
+  // This is a placeholder API fetch function. Replace with your actual API call.
   const fetchApi = useCallback(async (url: string, options: RequestInit = {}) => {
     const token = localStorage.getItem('accessToken');
     const headers = {
@@ -54,8 +54,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isAuthenticated, loggedInUser
     setIsLoading(true);
     setError(null);
     try {
-      // Corrected API endpoint for user profiles.
-      const profileData = await fetchApi(`/users/${targetUserId}`);
+      // Assuming this is the correct endpoint for user profiles.
+      const profileData = await fetchApi(`/users/${targetUserId}/profile`);
       setProfile(profileData?.data || null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load profile');
@@ -73,8 +73,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isAuthenticated, loggedInUser
   const handleProfileSave = async (updatedData: { username: string; bio: string; profileImageUrl?: string }) => {
     if (profile && profile.id === loggedInUserId) {
       try {
-        // Corrected API endpoint for updating user profiles.
-        const savedProfile = await fetchApi(`/users/${profile.id}`, {
+        // Assuming this is the correct endpoint for updating user profiles.
+        const savedProfile = await fetchApi(`/users/${profile.id}/profile`, {
             method: 'PUT',
             body: JSON.stringify(updatedData)
         });

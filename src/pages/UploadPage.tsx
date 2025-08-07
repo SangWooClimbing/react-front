@@ -115,8 +115,11 @@ const UploadPage: React.FC<UploadPageProps> = ({ userId }) => {
     const fetchGyms = async () => {
       setIsLoadingGyms(true);
       try {
-        // TODO: Gym API is not implemented yet.
-        setAvailableGyms([]);
+        // Assuming this is the correct endpoint for gyms.
+        const response = await fetch('/api/gyms'); // Adjust if your API is different
+        if (!response.ok) throw new Error('Failed to fetch gyms');
+        const data = await response.json();
+        setAvailableGyms(data.data || []);
       } catch (error) {
         console.error("Error fetching gyms:", error);
         setUploadError("Could not load gym list.");

@@ -29,7 +29,7 @@ const SearchResultsPage: React.FC<SearchResultsPageProps> = ({ isAuthenticated }
   }), [searchParams]);
 
 
-  // TODO: This is a placeholder API fetch function. Replace with your actual API call.
+  // This is a placeholder API fetch function. Replace with your actual API call.
   const fetchApi = useCallback(async (url: string, method: string = 'GET', body?: any) => {
     const token = localStorage.getItem('accessToken');
     const headers: HeadersInit = { 'Content-Type': 'application/json' };

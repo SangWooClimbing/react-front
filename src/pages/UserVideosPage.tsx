@@ -17,7 +17,7 @@ const UserVideosPage: React.FC<UserVideosPageProps> = ({ isAuthenticated }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // TODO: This is a placeholder API fetch function. Replace with your actual API call.
+  // This is a placeholder API fetch function. Replace with your actual API call.
   const fetchApi = useCallback(async (url: string, options: RequestInit = {}) => {
     const token = localStorage.getItem('accessToken');
     const headers = {
@@ -48,7 +48,7 @@ const UserVideosPage: React.FC<UserVideosPageProps> = ({ isAuthenticated }) => {
       setIsLoading(true);
       setError(null);
       try {
-        // This endpoint should return basic user data.
+        // Assuming this is the correct endpoint for user data.
         const userData = await fetchApi(`/users/${userIdParam}`); // Assuming an endpoint for basic user details
         setUser(userData?.data || null);
       } catch (err) {

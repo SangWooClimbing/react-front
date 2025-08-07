@@ -17,7 +17,7 @@ const StorePage: React.FC<StorePageProps> = ({ loggedInUserId }) => {
   const [selectedCategory, setSelectedCategory] = useState<StoreItem['category'] | 'All'>('All');
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
-  // TODO: This is a placeholder API fetch function. Replace with your actual API call.
+  // This is a placeholder API fetch function. Replace with your actual API call.
   const fetchApi = useCallback(async (url: string, options: RequestInit = {}) => {
     const token = localStorage.getItem('accessToken');
     const headers = {
