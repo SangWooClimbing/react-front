@@ -28,11 +28,8 @@ interface ApiResponse<T> {
 
 const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   const navigate = useNavigate();
-  const [isLoginView, setIsLoginView] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [username, setUsername] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -41,69 +38,32 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
     setError('');
     setIsLoading(true);
 
-    if (isLoginView) {
-      try {
-        const response = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, password }),
-        });
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-        const responseData: ApiResponse<TokenResponse> = await response.json();
+      const responseData: ApiResponse<TokenResponse> = await response.json();
 
-        if (response.ok && responseData.data) {
-          const { userId, accessToken, refreshToken } = responseData.data;
-          if (!userId) {
-            setError('Login successful, but user ID was not returned. Please contact support.');
-            setIsLoading(false);
-            return;
-          }
-          onLogin(userId, accessToken, refreshToken);
-          navigate(ROUTE_PATHS.HOME);
-        } else {
-          setError(responseData.error?.message || 'Login failed. Please check your credentials.');
+      if (response.ok && responseData.data) {
+        const { userId, accessToken, refreshToken } = responseData.data;
+        if (!userId) {
+          setError('Login successful, but user ID was not returned. Please contact support.');
+          setIsLoading(false);
+          return;
         }
-      } catch (err) {
-        console.error('Login API error:', err);
-        setError('An unexpected error occurred. Please try again.');
+        onLogin(userId, accessToken, refreshToken);
+        navigate(ROUTE_PATHS.HOME);
+      } else {
+        setError(responseData.error?.message || 'Login failed. Please check your credentials.');
       }
-    } else { // Signup
-      if (password !== confirmPassword) {
-        setError('Passwords do not match.');
-        setIsLoading(false);
-        return;
-      }
-      if (!username.trim()) {
-        setError('Username is required.');
-        setIsLoading(false);
-        return;
-      }
-      try {
-        const response = await fetch('/api/auth/signup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password, username /* Add other fields as per your Signup DTO */ }),
-        });
-        const responseData: ApiResponse<any> = await response.json(); // Adjust 'any' to your signup response type
-        if (response.ok) {
-            alert('Registration successful! Please log in.');
-            setIsLoginView(true); // Switch to login view
-            // Clear form fields for login
-            setUsername('');
-            // setPassword(''); // Keep email, maybe clear password
-            setConfirmPassword('');
-        } else {
-            setError(responseData.error?.message || 'Signup failed. Please try again.');
-        }
-
-      } catch (err) {
-        console.error('Signup API error:', err);
-        setError('An unexpected error occurred during signup. Please try again.');
-      }
+    } catch (err) {
+      console.error('Login API error:', err);
+      setError('An unexpected error occurred. Please try again.');
     }
     setIsLoading(false);
   };
@@ -131,33 +91,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
             </h2>
         </Link>
         <h2 className="mt-2 text-center text-xl text-slate-600">
-          {isLoginView ? 'Sign in to your account' : 'Create a new account'}
+          Sign in to your account
         </h2>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow-xl rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
-            {!isLoginView && (
-              <div>
-                <label htmlFor="username" className="block text-sm font-medium text-slate-700">
-                  Username
-                </label>
-                <div className="mt-1 relative">
-                  <UserPlusIcon className="h-5 w-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"/>
-                  <input
-                    id="username"
-                    name="username"
-                    type="text"
-                    autoComplete="username"
-                    required={!isLoginView}
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="appearance-none block w-full px-3 py-2 pl-10 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  />
-                </div>
-              </div>
-            )}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-slate-700">
                 Email address
@@ -196,42 +136,19 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
               </div>
             </div>
 
-            {!isLoginView && (
-              <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-700">
-                  Confirm Password
-                </label>
-                <div className="mt-1 relative">
-                  <LockClosedIcon className="h-5 w-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"/>
-                  <input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    autoComplete="new-password"
-                    required={!isLoginView}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="appearance-none block w-full px-3 py-2 pl-10 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                  />
-                </div>
-              </div>
-            )}
-
             {error && <p className="text-sm text-red-600 bg-red-50 p-3 rounded-md text-center">{error}</p>}
 
             <div className="flex items-center justify-between">
-              {isLoginView && (
-                <div className="text-sm">
-                  <a href="#" className="font-medium text-primary hover:text-blue-500">
-                    Forgot your password?
-                  </a>
-                </div>
-              )}
+              <div className="text-sm">
+                <a href="#" className="font-medium text-primary hover:text-blue-500">
+                  Forgot your password?
+                </a>
+              </div>
             </div>
 
             <div>
-              <Button type="submit" variant="primary" className="w-full" isLoading={isLoading} leftIcon={isLoginView ? <ArrowRightOnRectangleIcon className="h-5 w-5"/> : <UserPlusIcon className="h-5 w-5"/>}>
-                {isLoginView ? 'Sign in' : 'Create account'}
+              <Button type="submit" variant="primary" className="w-full" isLoading={isLoading} leftIcon={<ArrowRightOnRectangleIcon className="h-5 w-5"/>}>
+                Sign in
               </Button>
             </div>
           </form>
@@ -257,9 +174,9 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
             </div>
 
             <div className="mt-6 text-center text-sm">
-              <button onClick={() => { setIsLoginView(!isLoginView); setError(''); }} className="font-medium text-primary hover:text-blue-500">
-                {isLoginView ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
-              </button>
+              <Link to={ROUTE_PATHS.SIGNUP} className="font-medium text-primary hover:text-blue-500">
+                Don't have an account? Sign up
+              </Link>
             </div>
           </div>
         </div>

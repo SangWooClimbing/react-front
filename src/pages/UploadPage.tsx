@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { Gym, DifficultyGrade, MediaItem } from '../types';
 import { DIFFICULTY_LEVELS } from '../constants';
@@ -116,10 +115,8 @@ const UploadPage: React.FC<UploadPageProps> = ({ userId }) => {
     const fetchGyms = async () => {
       setIsLoadingGyms(true);
       try {
-        const response = await fetch('/api/gyms'); // Adjust if your API is different
-        if (!response.ok) throw new Error('Failed to fetch gyms');
-        const data = await response.json();
-        setAvailableGyms(data.data || []);
+        // TODO: Gym API is not implemented yet.
+        setAvailableGyms([]);
       } catch (error) {
         console.error("Error fetching gyms:", error);
         setUploadError("Could not load gym list.");
@@ -194,6 +191,7 @@ const UploadPage: React.FC<UploadPageProps> = ({ userId }) => {
 
     try {
       const token = localStorage.getItem('accessToken');
+      // Assuming this is the correct endpoint for uploading videos.
       const response = await fetch('/api/videos', { // Assuming POST to /api/videos for new video posts
         method: 'POST',
         headers: token ? { 'Authorization': `Bearer ${token}` } : {}, // No 'Content-Type' for FormData

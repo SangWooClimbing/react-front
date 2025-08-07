@@ -17,6 +17,7 @@ const HomePage: React.FC<HomePageProps> = ({ isAuthenticated }) => {
   const [errorGyms, setErrorGyms] = useState<string | null>(null);
   const loggedInUserId = localStorage.getItem('userId');
 
+  // TODO: This is a placeholder API fetch function. Replace with your actual API call.
   const fetchApi = useCallback(async (url: string, options: RequestInit = {}) => {
     const token = localStorage.getItem('accessToken');
     const headers: HeadersInit = {
@@ -27,7 +28,8 @@ const HomePage: React.FC<HomePageProps> = ({ isAuthenticated }) => {
         (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await fetch(`/api${url}`, { ...options, headers }); // Ensure /api prefix
+    // All API calls are prefixed with /api. You might need to change this depending on your setup.
+    const response = await fetch(`/api${url}`, { ...options, headers });
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({ message: response.statusText }));
         throw new Error(errorData.message || `API request to ${url} failed with status ${response.status}`);
@@ -41,6 +43,7 @@ const HomePage: React.FC<HomePageProps> = ({ isAuthenticated }) => {
       setLoadingGyms(true);
       setErrorGyms(null);
       try {
+        // Assuming this is the correct endpoint for featured gyms.
         const response = await fetchApi('/gyms?featured=true&limit=6'); 
         setGyms(response?.data || []);
       } catch (err) {
@@ -55,6 +58,7 @@ const HomePage: React.FC<HomePageProps> = ({ isAuthenticated }) => {
 
   const fetchRecommendedVideos = useCallback(async (page: number): Promise<{ videos: VideoPost[], hasMore: boolean }> => {
     try {
+      // Assuming this is the correct endpoint for recommended videos.
       const response = await fetchApi(`/videos?recommended=true&page=${page}&limit=8`);
       return {
         videos: response?.data || [],
@@ -73,7 +77,8 @@ const HomePage: React.FC<HomePageProps> = ({ isAuthenticated }) => {
         return;
     }
     try {
-        await fetchApi(`/gyms/${gymId}/bookmark`, { method: 'POST' }); // Assuming backend toggles
+        // Assuming this is the correct endpoint for toggling gym bookmarks.
+        await fetchApi(`/gyms/${gymId}/bookmark`, { method: 'POST' });
         setGyms(prevGyms => 
           prevGyms.map(gym => 
             gym.id === gymId 

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { Notification } from '../types';
 import { BellAlertIcon, CheckCircleIcon, EyeIcon, TagIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
@@ -58,6 +57,7 @@ const NotificationsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'unread'>('unread');
 
+  // TODO: This is a placeholder API fetch function. Replace with your actual API call.
   const fetchApi = useCallback(async (url: string, options: RequestInit = {}) => {
     const token = localStorage.getItem('accessToken');
     const headers = {
@@ -68,6 +68,7 @@ const NotificationsPage: React.FC = () => {
         (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
     }
 
+    // All API calls are prefixed with /api. You might need to change this depending on your setup.
     const response = await fetch(`/api${url}`, { ...options, headers });
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({ message: response.statusText }));
@@ -81,6 +82,7 @@ const NotificationsPage: React.FC = () => {
       setIsLoading(true);
       setError(null);
       try {
+        // Assuming this is the correct endpoint for notifications.
         const response = await fetchApi('/notifications');
         setNotifications(response?.data || []);
       } catch (err) {
@@ -96,6 +98,7 @@ const NotificationsPage: React.FC = () => {
 
   const handleMarkRead = async (id: string) => {
     try {
+      // Assuming this is the correct endpoint for marking a notification as read.
       await fetchApi(`/notifications/${id}/read`, { method: 'POST' });
       setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
     } catch (err) {
@@ -105,6 +108,7 @@ const NotificationsPage: React.FC = () => {
 
   const handleMarkAllRead = async () => {
     try {
+        // Assuming this is the correct endpoint for marking all notifications as read.
         await fetchApi('/notifications/mark-all-read', { method: 'POST' });
         setNotifications(prev => prev.map(n => ({ ...n, read: true })));
     } catch (err) {

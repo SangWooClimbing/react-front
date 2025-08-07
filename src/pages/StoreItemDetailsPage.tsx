@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
@@ -25,6 +24,7 @@ const StoreItemDetailsPage: React.FC = () => {
   const addItemToCart = useCartStore(state => state.addItem);
   const isItemInCart = useCartStore(state => state.isItemInCart);
 
+  // TODO: This is a placeholder API fetch function. Replace with your actual API call.
   const fetchApi = useCallback(async (url: string, options: RequestInit = {}) => {
     const token = localStorage.getItem('accessToken'); // Though likely not needed for public item view
     const headers = {
@@ -34,6 +34,7 @@ const StoreItemDetailsPage: React.FC = () => {
     if (token) {
         (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
     }
+    // All API calls are prefixed with /api. You might need to change this depending on your setup.
     const response = await fetch(`/api${url}`, { ...options, headers });
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({ message: response.statusText }));
@@ -52,6 +53,7 @@ const StoreItemDetailsPage: React.FC = () => {
       setIsLoading(true);
       setError(null);
       try {
+        // Assuming this is the correct endpoint for store item details.
         const response = await fetchApi(`/store/items/${itemId}`); // Adjust API endpoint
         setItem(response?.data || null);
       } catch (err) {

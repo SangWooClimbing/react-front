@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { VideoPost, User } from '../types';
@@ -18,6 +17,7 @@ const UserVideosPage: React.FC<UserVideosPageProps> = ({ isAuthenticated }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // TODO: This is a placeholder API fetch function. Replace with your actual API call.
   const fetchApi = useCallback(async (url: string, options: RequestInit = {}) => {
     const token = localStorage.getItem('accessToken');
     const headers = {
@@ -27,6 +27,7 @@ const UserVideosPage: React.FC<UserVideosPageProps> = ({ isAuthenticated }) => {
     if (token) {
         (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
     }
+    // All API calls are prefixed with /api. You might need to change this depending on your setup.
     const response = await fetch(`/api${url}`, { ...options, headers });
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({ message: response.statusText }));
@@ -47,6 +48,7 @@ const UserVideosPage: React.FC<UserVideosPageProps> = ({ isAuthenticated }) => {
       setIsLoading(true);
       setError(null);
       try {
+        // This endpoint should return basic user data.
         const userData = await fetchApi(`/users/${userIdParam}`); // Assuming an endpoint for basic user details
         setUser(userData?.data || null);
       } catch (err) {
@@ -63,7 +65,7 @@ const UserVideosPage: React.FC<UserVideosPageProps> = ({ isAuthenticated }) => {
   const fetchUserVideosPage = useCallback(async (page: number): Promise<{ videos: VideoPost[], hasMore: boolean }> => {
     if (!userIdParam) return { videos: [], hasMore: false };
     try {
-      // Assuming API endpoint /api/videos?userId={userIdParam}&page={page}&limit={defaultLimit}
+      // Assuming this is the correct endpoint for user videos.
       const response = await fetchApi(`/videos?userId=${userIdParam}&page=${page}&limit=8`); // Example limit
       return {
         videos: response?.data || [],

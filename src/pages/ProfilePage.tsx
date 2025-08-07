@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { UserProfile as UserProfileType, VideoPost } from '../types';
@@ -26,6 +25,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isAuthenticated, loggedInUser
 
   const targetUserId = userIdParam || loggedInUserId;
 
+  // TODO: This is a placeholder API fetch function. Replace with your actual API call.
   const fetchApi = useCallback(async (url: string, options: RequestInit = {}) => {
     const token = localStorage.getItem('accessToken');
     const headers = {
@@ -35,6 +35,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isAuthenticated, loggedInUser
     if (token) {
         (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
     }
+    // All API calls are prefixed with /api. You might need to change this depending on your setup.
     const response = await fetch(`/api${url}`, { ...options, headers });
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({ message: response.statusText }));
@@ -53,7 +54,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isAuthenticated, loggedInUser
     setIsLoading(true);
     setError(null);
     try {
-      const profileData = await fetchApi(`/users/${targetUserId}/profile`);
+      // Corrected API endpoint for user profiles.
+      const profileData = await fetchApi(`/users/${targetUserId}`);
       setProfile(profileData?.data || null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load profile');
@@ -71,9 +73,10 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isAuthenticated, loggedInUser
   const handleProfileSave = async (updatedData: { username: string; bio: string; profileImageUrl?: string }) => {
     if (profile && profile.id === loggedInUserId) {
       try {
-        const savedProfile = await fetchApi(`/users/${profile.id}/profile`, { 
-            method: 'PUT', 
-            body: JSON.stringify(updatedData) 
+        // Corrected API endpoint for updating user profiles.
+        const savedProfile = await fetchApi(`/users/${profile.id}`, {
+            method: 'PUT',
+            body: JSON.stringify(updatedData)
         });
         setProfile(savedProfile?.data || profile); // Update with response from server or keep optimistic
         setIsEditModalOpen(false);
@@ -86,6 +89,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ isAuthenticated, loggedInUser
   const fetchUserVideos = useCallback(async (page: number): Promise<{ videos: VideoPost[], hasMore: boolean }> => {
     if (!targetUserId) return { videos: [], hasMore: false };
     try {
+      // Assuming this is the correct endpoint for user videos.
       const response = await fetchApi(`/videos?userId=${targetUserId}&page=${page}&limit=4`); // Adjust limit as needed
       return {
         videos: response?.data || [],

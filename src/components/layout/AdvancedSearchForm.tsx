@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DifficultyGrade, StoreItem } from '../../types';
@@ -42,6 +41,7 @@ const AdvancedSearchForm: React.FC<AdvancedSearchFormProps> = ({ initialQuery = 
     const fetchLocations = async () => {
       setIsLoadingLocations(true);
       try {
+        // Assuming this is the correct endpoint for gym locations.
         const response = await fetch('/api/gyms/locations'); // Adjust if API endpoint is different
         if (!response.ok) throw new Error('Failed to fetch locations');
         const data = await response.json();

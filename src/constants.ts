@@ -9,6 +9,7 @@ export const ROUTE_PATHS = {
   USER_VIDEOS: (userId: string) => `/profile/${userId}/videos`, 
   VIDEO_POST_DETAILS: (postId: string) => `/post/${postId}`,
   LOGIN: '/login',
+  SIGNUP: '/signup',
   STORE: '/store', 
   STORE_ITEM: (itemId: string) => `/store/${itemId}`, 
   SETTINGS: '/settings', 

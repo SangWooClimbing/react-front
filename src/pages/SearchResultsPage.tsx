@@ -29,11 +29,13 @@ const SearchResultsPage: React.FC<SearchResultsPageProps> = ({ isAuthenticated }
   }), [searchParams]);
 
 
+  // TODO: This is a placeholder API fetch function. Replace with your actual API call.
   const fetchApi = useCallback(async (url: string, method: string = 'GET', body?: any) => {
     const token = localStorage.getItem('accessToken');
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
     if (token) headers['Authorization'] = `Bearer ${token}`;
     
+    // All API calls are prefixed with /api. You might need to change this depending on your setup.
     const response = await fetch(`/api${url}`, { 
         method, 
         headers,
@@ -61,6 +63,7 @@ const SearchResultsPage: React.FC<SearchResultsPageProps> = ({ isAuthenticated }
       if (queryParams.category) apiParams.set('cat', queryParams.category);
       
       try {
+        // Assuming this is the correct endpoint for search.
         const response = await fetchApi(`/search?${apiParams.toString()}`);
         setResults(response?.data || []);
       } catch (err) {
@@ -81,6 +84,7 @@ const SearchResultsPage: React.FC<SearchResultsPageProps> = ({ isAuthenticated }
         return;
     }
     try {
+      // Assuming this is the correct endpoint for liking a video.
       await fetchApi(`/videos/${postId}/like`, 'POST');
       setResults(prevResults =>
         prevResults.map(item =>
@@ -103,6 +107,7 @@ const SearchResultsPage: React.FC<SearchResultsPageProps> = ({ isAuthenticated }
         return;
     }
     try {
+      // Assuming this is the correct endpoint for bookmarking a video.
       await fetchApi(`/videos/${postId}/bookmark`, 'POST');
       setResults(prevResults =>
         prevResults.map(item =>
@@ -123,6 +128,7 @@ const SearchResultsPage: React.FC<SearchResultsPageProps> = ({ isAuthenticated }
         return;
     }
     try {
+      // Assuming this is the correct endpoint for bookmarking a gym.
       await fetchApi(`/gyms/${gymId}/bookmark`, 'POST');
        setResults(prevResults =>
         prevResults.map(item =>

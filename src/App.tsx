@@ -7,6 +7,7 @@ import UploadPage from './pages/UploadPage';
 import SearchResultsPage from './pages/SearchResultsPage'; 
 import ProfilePage from './pages/ProfilePage';
 import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 import NotFoundPage from './pages/NotFoundPage';
 import StorePage from './pages/StorePage'; 
 import StoreItemDetailsPage from './pages/StoreItemDetailsPage'; 
@@ -75,6 +76,10 @@ const App: React.FC = () => {
         <Route 
           path={ROUTE_PATHS.LOGIN}
           element={isAuthenticated ? <Navigate to={ROUTE_PATHS.HOME} /> : <LoginPage onLogin={handleLogin} />} 
+        />
+        <Route
+          path={ROUTE_PATHS.SIGNUP}
+          element={isAuthenticated ? <Navigate to={ROUTE_PATHS.HOME} /> : <SignupPage />}
         />
         
         <Route 
