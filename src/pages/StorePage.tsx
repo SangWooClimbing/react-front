@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { StoreItem, User } from '../types';
 import StoreItemCard from '../components/store/StoreItemCard';
@@ -18,6 +17,7 @@ const StorePage: React.FC<StorePageProps> = ({ loggedInUserId }) => {
   const [selectedCategory, setSelectedCategory] = useState<StoreItem['category'] | 'All'>('All');
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
+  // TODO: This is a placeholder API fetch function. Replace with your actual API call.
   const fetchApi = useCallback(async (url: string, options: RequestInit = {}) => {
     const token = localStorage.getItem('accessToken');
     const headers = {
@@ -27,6 +27,7 @@ const StorePage: React.FC<StorePageProps> = ({ loggedInUserId }) => {
     if (token) {
         (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
     }
+    // All API calls are prefixed with /api. You might need to change this depending on your setup.
     const response = await fetch(`/api${url}`, { ...options, headers });
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({ message: response.statusText }));
@@ -40,6 +41,7 @@ const StorePage: React.FC<StorePageProps> = ({ loggedInUserId }) => {
       setIsLoading(true);
       setError(null);
       try {
+        // TODO: Replace with your actual API endpoints for store items and user data.
         const itemsPromise = fetchApi('/store/items'); // Adjust API endpoint
         const userPromise = loggedInUserId ? fetchApi(`/users/${loggedInUserId}`) : Promise.resolve(null);
         

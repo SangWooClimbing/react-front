@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { Gym, DifficultyGrade, MediaItem } from '../types';
 import { DIFFICULTY_LEVELS } from '../constants';
@@ -116,6 +115,7 @@ const UploadPage: React.FC<UploadPageProps> = ({ userId }) => {
     const fetchGyms = async () => {
       setIsLoadingGyms(true);
       try {
+        // TODO: Replace with your actual API endpoint for gyms.
         const response = await fetch('/api/gyms'); // Adjust if your API is different
         if (!response.ok) throw new Error('Failed to fetch gyms');
         const data = await response.json();
@@ -194,6 +194,7 @@ const UploadPage: React.FC<UploadPageProps> = ({ userId }) => {
 
     try {
       const token = localStorage.getItem('accessToken');
+      // TODO: Replace with your actual API endpoint for uploading videos.
       const response = await fetch('/api/videos', { // Assuming POST to /api/videos for new video posts
         method: 'POST',
         headers: token ? { 'Authorization': `Bearer ${token}` } : {}, // No 'Content-Type' for FormData
