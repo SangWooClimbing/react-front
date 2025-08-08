@@ -3,28 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import Button from '../components/ui/Button';
 import { APP_LOGO_TEXT, ROUTE_PATHS } from '../constants';
 import { ArrowRightOnRectangleIcon, UserPlusIcon, EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/outline';
+import { login, signup } from '../api';
 
 interface LoginPageProps {
   onLogin: (userId: string, accessToken: string, refreshToken: string) => void;
 }
-
-interface TokenResponse {
-  accessToken: string;
-  refreshToken: string;
-  userId: string; 
-}
-
-interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: {
-    message: string;
-    code?: string;
-    status?: number;
-    errors?: Array<{ field: string; message: string; code: string }>;
-  };
-}
-
 
 const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   const navigate = useNavigate();
@@ -41,71 +24,40 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
     setError('');
     setIsLoading(true);
 
-    if (isLoginView) {
-      try {
-        const response = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, password }),
-        });
-
-        const responseData: ApiResponse<TokenResponse> = await response.json();
-
-        if (response.ok && responseData.data) {
-          const { userId, accessToken, refreshToken } = responseData.data;
-          if (!userId) {
-            setError('Login successful, but user ID was not returned. Please contact support.');
-            setIsLoading(false);
-            return;
-          }
-          onLogin(userId, accessToken, refreshToken);
+    try {
+      if (isLoginView) {
+        const tokenData = await login({ email, password });
+        if (!tokenData?.userId) {
+          setError('Login successful, but user ID was not returned. Please contact support.');
+        } else {
+          onLogin(tokenData.userId, tokenData.accessToken, tokenData.refreshToken);
           navigate(ROUTE_PATHS.HOME);
-        } else {
-          setError(responseData.error?.message || 'Login failed. Please check your credentials.');
         }
-      } catch (err) {
-        console.error('Login API error:', err);
-        setError('An unexpected error occurred. Please try again.');
-      }
-    } else { // Signup
-      if (password !== confirmPassword) {
-        setError('Passwords do not match.');
-        setIsLoading(false);
-        return;
-      }
-      if (!username.trim()) {
-        setError('Username is required.');
-        setIsLoading(false);
-        return;
-      }
-      try {
-        const response = await fetch('/api/auth/signup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password, username /* Add other fields as per your Signup DTO */ }),
-        });
-        const responseData: ApiResponse<any> = await response.json(); // Adjust 'any' to your signup response type
-        if (response.ok) {
-            alert('Registration successful! Please log in.');
-            setIsLoginView(true); // Switch to login view
-            // Clear form fields for login
-            setUsername('');
-            // setPassword(''); // Keep email, maybe clear password
-            setConfirmPassword('');
-        } else {
-            setError(responseData.error?.message || 'Signup failed. Please try again.');
+      } else { // Signup
+        if (password !== confirmPassword) {
+          setError('Passwords do not match.');
+          setIsLoading(false);
+          return;
         }
-
-      } catch (err) {
-        console.error('Signup API error:', err);
-        setError('An unexpected error occurred during signup. Please try again.');
+        if (!username.trim()) {
+          setError('Username is required.');
+          setIsLoading(false);
+          return;
+        }
+        await signup({ email, password, username });
+        alert('Registration successful! Please log in.');
+        setIsLoginView(true); // Switch to login view
+        // Clear form fields for login
+        setUsername('');
+        setConfirmPassword('');
       }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred.';
+      console.error('API error:', errorMessage);
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const handleOAuth = (provider: string) => {
