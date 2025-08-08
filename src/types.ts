@@ -130,3 +130,48 @@ export function isVideoPost(item: SearchResultItem): item is VideoPost {
 export function isStoreItem(item: SearchResultItem): item is StoreItem {
   return (item as StoreItem).price !== undefined && (item as StoreItem).images !== undefined;
 }
+
+// =================================================================
+// API & Authentication Types
+// =================================================================
+
+/**
+ * Generic wrapper for all API responses from the backend.
+ * @template T The type of the `data` payload.
+ */
+export interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: {
+    message: string;
+    code?: string;
+    status?: number;
+    errors?: Array<{ field: string; message: string; code: string }>;
+  };
+}
+
+/**
+ * The shape of the token object returned on successful login.
+ */
+export interface TokenResponse {
+  accessToken: string;
+  refreshToken: string;
+  userId: string;
+}
+
+/**
+ * Credentials for the login endpoint.
+ */
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+/**
+ * Data required for the signup endpoint.
+ */
+export interface SignupData {
+  email: string;
+  password: string;
+  username: string;
+}
